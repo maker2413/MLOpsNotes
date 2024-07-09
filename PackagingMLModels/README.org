@@ -2,6 +2,11 @@
 #+PROPERTY: header-args:python :session python
 #+PROPERTY: header-args:python+ :tangle loan.py
 
+In this section we will learn how to package trained ML models. To begin with we
+train a simple model to... ~TODO: fill in more information here~
+
+Let's begin with importing a couple of python libraries that will be required to
+interact with the sample data we have been given:
 #+begin_src python :results none
   import numpy as np
   import pandas as pd
@@ -9,7 +14,9 @@
   from sklearn.preprocessing import LabelEncoder,MinMaxScaler
 #+end_src
 
-Now let's open our training and test csv files:
+In this directory we have in =train.csv= file that contains data to train our
+model and a =test.csv= file that contains data to test our model. Now let's open
+our training and test csv files:
 #+begin_src python :results none
   raw_train = pd.read_csv("train.csv")
   raw_test = pd.read_csv("test.csv")
@@ -76,24 +83,67 @@ the original variable to play with without reopening the file:
 #+end_src
 
 Let's confirm all of our data is present in our new variable:
-#+begin_src python :exports both :return train_df
-  train_df.info()
+#+begin_src python :exports both :results output
+  print(train_df.info())
 #+end_src
 
 #+RESULTS:
 #+begin_example
-      Loan_ID  Gender Married  ... Credit_History Property_Area Loan_Status
-0    LP001002    Male      No  ...            1.0         Urban           Y
-1    LP001003    Male     Yes  ...            1.0         Rural           N
-2    LP001005    Male     Yes  ...            1.0         Urban           Y
-3    LP001006    Male     Yes  ...            1.0         Urban           Y
-4    LP001008    Male      No  ...            1.0         Urban           Y
-..        ...     ...     ...  ...            ...           ...         ...
-609  LP002978  Female      No  ...            1.0         Rural           Y
-610  LP002979    Male     Yes  ...            1.0         Rural           Y
-611  LP002983    Male     Yes  ...            1.0         Urban           Y
-612  LP002984    Male     Yes  ...            1.0         Urban           Y
-613  LP002990  Female      No  ...            0.0     Semiurban           N
-
-[614 rows x 13 columns]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 614 entries, 0 to 613
+Data columns (total 13 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   Loan_ID            614 non-null    object 
+ 1   Gender             601 non-null    object 
+ 2   Married            611 non-null    object 
+ 3   Dependents         599 non-null    object 
+ 4   Education          614 non-null    object 
+ 5   Self_Employed      582 non-null    object 
+ 6   ApplicantIncome    614 non-null    int64  
+ 7   CoapplicantIncome  614 non-null    float64
+ 8   LoanAmount         592 non-null    float64
+ 9   Loan_Amount_Term   600 non-null    float64
+ 10  Credit_History     564 non-null    float64
+ 11  Property_Area      614 non-null    object 
+ 12  Loan_Status        614 non-null    object 
+dtypes: float64(4), int64(1), object(8)
+memory usage: 62.5+ KB
+None
 #+end_example
+
+We can also see from the above output that although we have 614 rows in our
+newly created training data frame variable not all of our columns have 614 rows
+of data. That is just a simple observation we can make about the dataset we were
+given. Let's now check to see what the contents of our test data frame are:
+#+begin_src python :exports both :results output
+  test_df.info()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 362 entries, 0 to 361
+Data columns (total 12 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   Loan_ID            362 non-null    object 
+ 1   Gender             351 non-null    object 
+ 2   Married            362 non-null    object 
+ 3   Dependents         353 non-null    object 
+ 4   Education          362 non-null    object 
+ 5   Self_Employed      339 non-null    object 
+ 6   ApplicantIncome    362 non-null    int64  
+ 7   CoapplicantIncome  362 non-null    int64  
+ 8   LoanAmount         362 non-null    int64  
+ 9   Loan_Amount_Term   356 non-null    float64
+ 10  Credit_History     333 non-null    float64
+ 11  Property_Area      362 non-null    object 
+dtypes: float64(2), int64(3), object(7)
+memory usage: 34.1+ KB
+#+end_example
+
+We can see from this that our test data frame only has 12 columns and is in fact
+missing the =Loan_Status= column so we will only be able to use this test data
+for generating the prediction and we will not be able to use our test data for
+preforming the evaluation of our model.
