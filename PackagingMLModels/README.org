@@ -1,0 +1,99 @@
+#+TITLE: Chapter 1
+#+PROPERTY: header-args:python :session python
+#+PROPERTY: header-args:python+ :tangle loan.py
+
+#+begin_src python :results none
+  import numpy as np
+  import pandas as pd
+  from sklearn.impute import SimpleImputer
+  from sklearn.preprocessing import LabelEncoder,MinMaxScaler
+#+end_src
+
+Now let's open our training and test csv files:
+#+begin_src python :results none
+  raw_train = pd.read_csv("train.csv")
+  raw_test = pd.read_csv("test.csv")
+#+end_src
+
+We can then print the beginning of our training file to prove that we have
+opened it properly:
+#+begin_src python :exports both :tangle no
+  raw_train.head()
+#+end_src
+
+#+RESULTS:
+:     Loan_ID Gender Married  ... Credit_History Property_Area Loan_Status
+: 0  LP001002   Male      No  ...            1.0         Urban           Y
+: 1  LP001003   Male     Yes  ...            1.0         Rural           N
+: 2  LP001005   Male     Yes  ...            1.0         Urban           Y
+: 3  LP001006   Male     Yes  ...            1.0         Urban           Y
+: 4  LP001008   Male      No  ...            1.0         Urban           Y
+: 
+: [5 rows x 13 columns]
+
+Mind you this is just a small sample of our dataset, however we can see that we
+have an ID value in the first column of this output. We can use the following to
+see how many unique IDs we have this dataset:
+#+begin_src python :exports both :tangle no
+  raw_train.nunique()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Loan_ID              614
+Gender                 2
+Married                2
+Dependents             4
+Education              2
+Self_Employed          2
+ApplicantIncome      505
+CoapplicantIncome    287
+LoanAmount           203
+Loan_Amount_Term      10
+Credit_History         2
+Property_Area          3
+Loan_Status            2
+dtype: int64
+#+end_example
+
+We can also see how many rows and columns we have this dataset with the
+following:
+#+begin_src python :exports both :tangle no :results verbatim
+  raw_train.shape
+#+end_src
+
+We can see that we have 13 columns and 614 rows:
+#+RESULTS:
+: (614, 13)
+
+Now to be honest, the ID column isn't going to be useful for our actual training
+of our model so we can just drop that column. Before we do that though let's
+store a copy of our existing variable in a new variable so that we still have
+the original variable to play with without reopening the file:
+#+begin_src python :exports both :results none
+  train_df = raw_train.copy()
+  test_df = raw_test.copy()
+#+end_src
+
+Let's confirm all of our data is present in our new variable:
+#+begin_src python :exports both :return train_df
+  train_df.info()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+      Loan_ID  Gender Married  ... Credit_History Property_Area Loan_Status
+0    LP001002    Male      No  ...            1.0         Urban           Y
+1    LP001003    Male     Yes  ...            1.0         Rural           N
+2    LP001005    Male     Yes  ...            1.0         Urban           Y
+3    LP001006    Male     Yes  ...            1.0         Urban           Y
+4    LP001008    Male      No  ...            1.0         Urban           Y
+..        ...     ...     ...  ...            ...           ...         ...
+609  LP002978  Female      No  ...            1.0         Rural           Y
+610  LP002979    Male     Yes  ...            1.0         Rural           Y
+611  LP002983    Male     Yes  ...            1.0         Urban           Y
+612  LP002984    Male     Yes  ...            1.0         Urban           Y
+613  LP002990  Female      No  ...            0.0     Semiurban           N
+
+[614 rows x 13 columns]
+#+end_example
