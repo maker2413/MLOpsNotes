@@ -1,6 +1,8 @@
 #+TITLE: Chapter 1
 #+PROPERTY: header-args:python :session python
 #+PROPERTY: header-args:python+ :tangle loan.py
+#+PROPERTY: header-args:python+ :results raw drawer
+#+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python"
 
 In this section we will learn how to package trained ML models. To begin with we
 train a simple model to... ~TODO: fill in more information here~
@@ -65,12 +67,13 @@ dtype: int64
 
 We can also see how many rows and columns we have this dataset with the
 following:
+#+name: shape
 #+begin_src python :exports both :tangle no :results verbatim
   raw_train.shape
 #+end_src
 
 We can see that we have 13 columns and 614 rows:
-#+RESULTS:
+#+RESULTS: shape
 : (614, 13)
 
 Now to be honest, the ID column isn't going to be useful for our actual training
