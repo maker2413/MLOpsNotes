@@ -3,3 +3,6 @@
 This repository contains the notes I took while studying MLOps. I used the
 following course on Udemy to learn MLOps:
 https://www.udemy.com/course/mlops-bootcamp-mastering-ai-operations-for-success-aiops.
+
+Here are my notes on individual chapters:
+- 1. :: [[./packagingMLModels/README.org][Packing the ML Models]]
