@@ -1,6 +1,6 @@
 #+TITLE: MLFlow
 #+PROPERTY: header-args:python :session mlflow
-#+PROPERTY: header-args:python+ :tangle tut-mlflow.py
+#+PROPERTY: header-args:python+ :tangle mlflow-intro.py
 #+PROPERTY: header-args:python+ :results output
 #+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python"
 
@@ -19,7 +19,70 @@ track the end-to-end ML development process, including:
 - Deployment
 - Collaboration
 
-* Tracking Server
-  #+begin_src python
+To begin let's start the mlflow server by running: ~mlflow ui~ in the
+terminal. In my case I am using [[https://github.com/astral-sh/uv][uv]] to manage my python environments and packages
+so I will run ~uv run mlflow ui~.
 
+At that point we can go to ~127.0.0.1:5000~ in a web browser of our choosing.
+
+* Tracking Server
+  To begin let's import the mlflow library:
+  #+name: import
+  #+begin_src python :results none
+    import mlflow
   #+end_src
+
+  Now we are going to set the tracking uri:
+  #+begin_src python :results none
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+  #+end_src
+
+  Now we can set our experiment:
+  #+name: mlflowexperiment
+  #+begin_src python
+    mlflow.set_experiment("Check localhost connection")
+
+    with mlflow.start_run():
+        mlflow.log_metric("test",1)
+        mlflow.log_metric("Maker",2)
+  #+end_src
+
+  We will see something like this output when we run this code block:
+  #+RESULTS: mlflowexperiment
+  : 2024/11/09 12:47:00 INFO mlflow.tracking.fluent: Experiment with name 'Check localhost connection' does not exist. Creating a new experiment.
+  : 2024/11/09 12:47:00 INFO mlflow.tracking._tracking_service.client: 🏃 View run classy-wolf-377 at: http://127.0.0.1:5000/#/experiments/949225769183837878/runs/4d2be2641aa144c292591d6988473c05.
+  : 2024/11/09 12:47:00 INFO mlflow.tracking._tracking_service.client: 🧪 View experiment at: http://127.0.0.1:5000/#/experiments/949225769183837878.
+
+  With our mlflow server open in our web browser now if we refresh we should see
+  an experiment called: =Check localhost connection=. If we click on this
+  experiment we should see our run and we can click on that we will be able to
+  see information about that experiment run like the experiment id, run id, the
+  metrics we set, model metrics, and much more. We will go over what all this
+  means later on. This was just to give you an idea of what an mlflow tracking
+  server looks like.
+
+  We can also kick off a few more runs to see more populate in the mlflow ui:
+  #+name: moreruns
+  #+begin_src python
+    with mlflow.start_run():
+        mlflow.log_metric("test1",1)
+        mlflow.log_metric("Maker1",2)
+
+    with mlflow.start_run():
+        mlflow.log_metric("test2",1)
+        mlflow.log_metric("Maker2",2)
+  #+end_src
+
+  And we can see them kick off:
+  #+RESULTS: moreruns
+  : 2024/11/09 12:48:06 INFO mlflow.tracking._tracking_service.client: 🏃 View run casual-mule-562 at: http://127.0.0.1:5000/#/experiments/949225769183837878/runs/822d338701ab468d8b71cb7d549313c1.
+  : 2024/11/09 12:48:06 INFO mlflow.tracking._tracking_service.client: 🧪 View experiment at: http://127.0.0.1:5000/#/experiments/949225769183837878.
+  : 2024/11/09 12:48:06 INFO mlflow.tracking._tracking_service.client: 🏃 View run wistful-shark-766 at: http://127.0.0.1:5000/#/experiments/949225769183837878/runs/30d4d1a589d8483ab225afffc0f17447.
+  : 2024/11/09 12:48:06 INFO mlflow.tracking._tracking_service.client: 🧪 View experiment at: http://127.0.0.1:5000/#/experiments/949225769183837878.
+
+  Now if we go into the mlflow ui we will see we have 3 runs in our
+  =Check localhost connection= experiment. If we click the checkbox next to
+  multiple runs we can click =Compare= to compare the runs against each other.
+
+  Since this section was just a basic introduction to MLFlow that is all the
+  deeper we will go. In the next section we will begin our first ML project.
