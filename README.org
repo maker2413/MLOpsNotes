@@ -2,7 +2,12 @@
 
 This repository contains the notes I took while studying MLOps. I used the
 following course on Udemy to learn MLOps:
-https://www.udemy.com/course/mlops-bootcamp-mastering-ai-operations-for-success-aiops.
+[[https://www.udemy.com/course/complete-mlops-bootcamp-with-10-end-to-end-ml-projects/]].
 
-Here are my notes on individual chapters:
-- 1. :: [[./packagingMLModels/README.org][Packing the ML Models]]
+If you want to following along with my notes I suggest first learning just a
+little bit of Python: [[https://github.com/maker2413/PythonNotes]].
+
+Once you have that done I would go through the material found in this repo in
+the following order:
+- 1. :: [[./introToMLFlow/README.org][Intro to MLFlow]]
+- 2. :: [[./firstMLProject/README.org][First ML Project]]

@@ -1,7 +1,7 @@
 [project]
-name = "mlflowtutorial"
+name = "firstmlproject"
 version = "0.1.0"
-description = "Introduction to MLFlow"
+description = "My first ML project in MLFlow"
 readme = "README.org"
 requires-python = ">=3.12"
 dependencies = [
