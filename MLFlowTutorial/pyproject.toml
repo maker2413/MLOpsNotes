@@ -1,0 +1,9 @@
+[project]
+name = "mlflowtutorial"
+version = "0.1.0"
+description = "Playground to learn MLFlow"
+readme = "README.org"
+requires-python = ">=3.12"
+dependencies = [
+    "mlflow>=2.17.2",
+]
