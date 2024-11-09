@@ -10,6 +10,6 @@ raw_test = pd.read_csv("test.csv")
 train_df = raw_train.copy()
 test_df = raw_test.copy()
 
-print(train_df.info())
+train_df.info()
 
 test_df.info()

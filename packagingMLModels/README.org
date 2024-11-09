@@ -1,11 +1,22 @@
 #+TITLE: Chapter 1
-#+PROPERTY: header-args:python :session python
+#+PROPERTY: header-args:python :session loan
 #+PROPERTY: header-args:python+ :tangle loan.py
-#+PROPERTY: header-args:python+ :results raw drawer
+#+PROPERTY: header-args:python+ :results output
 #+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python"
 
-In this section we will learn how to package trained ML models. To begin with we
-train a simple model to... ~TODO: fill in more information here~
+#+BEGIN_SRC elisp :exports none :results none
+  ;; This will make org-babel use the .venv directory in this repo
+  (setq org-babel-python-command (concat
+                                  (file-name-directory (or load-file-name (buffer-file-name)))
+                                  ".venv/bin/python"))
+#+END_SRC
+
+In this section we will learn how to package trained ML models. To begin with
+pretend we are working for a company that wants to automate the loan eligibility
+detection based on the customer details provided in an online application form.
+
+We need to classify each row as - whether a loan would be approved or not. We
+should begin by exploring our dataset.
 
 Let's begin with importing a couple of python libraries that will be required to
 interact with the sample data we have been given:
@@ -16,7 +27,7 @@ interact with the sample data we have been given:
   from sklearn.preprocessing import LabelEncoder,MinMaxScaler
 #+end_src
 
-In this directory we have in =train.csv= file that contains data to train our
+In this directory we have a =train.csv= file that contains data to train our
 model and a =test.csv= file that contains data to test our model. Now let's open
 our training and test csv files:
 #+begin_src python :results none
@@ -26,24 +37,25 @@ our training and test csv files:
 
 We can then print the beginning of our training file to prove that we have
 opened it properly:
-#+begin_src python :exports both :tangle no
+#+name: printhead
+#+begin_src python :exports both :tangle no :results value
   raw_train.head()
 #+end_src
 
-#+RESULTS:
-:     Loan_ID Gender Married  ... Credit_History Property_Area Loan_Status
-: 0  LP001002   Male      No  ...            1.0         Urban           Y
-: 1  LP001003   Male     Yes  ...            1.0         Rural           N
-: 2  LP001005   Male     Yes  ...            1.0         Urban           Y
-: 3  LP001006   Male     Yes  ...            1.0         Urban           Y
-: 4  LP001008   Male      No  ...            1.0         Urban           Y
+#+RESULTS: printhead
+:     Loan_ID Gender Married Dependents  ... Loan_Amount_Term Credit_History  Property_Area  Loan_Status
+: 0  LP001002   Male      No          0  ...            360.0            1.0          Urban            Y
+: 1  LP001003   Male     Yes          1  ...            360.0            1.0          Rural            N
+: 2  LP001005   Male     Yes          0  ...            360.0            1.0          Urban            Y
+: 3  LP001006   Male     Yes          0  ...            360.0            1.0          Urban            Y
+: 4  LP001008   Male      No          0  ...            360.0            1.0          Urban            Y
 : 
 : [5 rows x 13 columns]
 
 Mind you this is just a small sample of our dataset, however we can see that we
 have an ID value in the first column of this output. We can use the following to
 see how many unique IDs we have this dataset:
-#+begin_src python :exports both :tangle no
+#+begin_src python :exports both :tangle no :results value
   raw_train.nunique()
 #+end_src
 
@@ -65,29 +77,29 @@ Loan_Status            2
 dtype: int64
 #+end_example
 
-We can also see how many rows and columns we have this dataset with the
+We can also see how many rows and columns we have in this dataset with the
 following:
 #+name: shape
-#+begin_src python :exports both :tangle no :results verbatim
+#+begin_src python :exports both :tangle no :results value
   raw_train.shape
 #+end_src
 
 We can see that we have 13 columns and 614 rows:
 #+RESULTS: shape
-: (614, 13)
+| 614 | 13 |
 
-Now to be honest, the ID column isn't going to be useful for our actual training
+Now to be honest, the ID column isn't going to be useful for the actual training
 of our model so we can just drop that column. Before we do that though let's
 store a copy of our existing variable in a new variable so that we still have
 the original variable to play with without reopening the file:
-#+begin_src python :exports both :results none
+#+begin_src python :results none
   train_df = raw_train.copy()
   test_df = raw_test.copy()
 #+end_src
 
 Let's confirm all of our data is present in our new variable:
 #+begin_src python :exports both :results output
-  print(train_df.info())
+  train_df.info()
 #+end_src
 
 #+RESULTS:
@@ -112,7 +124,6 @@ Data columns (total 13 columns):
  12  Loan_Status        614 non-null    object 
 dtypes: float64(4), int64(1), object(8)
 memory usage: 62.5+ KB
-None
 #+end_example
 
 We can also see from the above output that although we have 614 rows in our
