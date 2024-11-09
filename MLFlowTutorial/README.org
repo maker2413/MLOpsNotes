@@ -1,6 +1,6 @@
 #+TITLE: MLFlow
 #+PROPERTY: header-args:python :session mlflow
-#+PROPERTY: header-args:python+ :tangle mlflow.py
+#+PROPERTY: header-args:python+ :tangle tut-mlflow.py
 #+PROPERTY: header-args:python+ :results output
 #+PROPERTY: header-args:python+ :shebang "#!/usr/bin/env python"
 
@@ -11,6 +11,15 @@
                                   ".venv/bin/python"))
 #+END_SRC
 
-#+begin_src python
+MLflow is an open-source platform designed to simplify the machine learning (ML)
+lifecycle. It provides a comprehensive set of tools and frameworks to manage and
+track the end-to-end ML development process, including:
+- Experimentation
+- Reproducibility
+- Deployment
+- Collaboration
 
-#+end_src
+* Tracking Server
+  #+begin_src python
+
+  #+end_src
